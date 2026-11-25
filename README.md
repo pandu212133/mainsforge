@@ -1,2 +1,15 @@
-# mainsforge
-answer
+# MainsForge NVIDIA edition
+Deploy this entire directory as a Cloudflare Worker with static assets, using the free plan. No Mac inference, no paid API subscription required while your NVIDIA trial access lasts. No real key is included. GitHub Pages alone will not work for AI because NVIDIA browser CORS may block requests.
+
+## Deployment
+1. Upload all files in this directory (including public/, worker.mjs and wrangler.jsonc) into your own GitHub repository. A private repo is preferable when available. Never upload your key.
+2. In Cloudflare dashboard, Workers & Pages > Create application > import a Git repository; select this repository and Workers (not Pages). Use `npx wrangler deploy` as deploy command; leave build command empty. Alternatively on any computer with Node run `npx wrangler login` then `npx wrangler deploy` from this directory. Wrangler may prompt for installation. Keep free plan, do not enable paid products. If dashboard options vary, use the CLI route.
+3. Open your assigned HTTPS workers.dev URL in Safari. Add to Home Screen. Use the same URL on each device; each device has a separate vault and history.
+4. In Intelligence settings enter your NVIDIA key and a unique strong vault passphrase if you want persistent encrypted storage; alternatively use the key in memory only. Discover models, select a chat-capable model and test inference. Return to Practice, choose AI task in settings, run AI evaluation. Optional second model costs a second request.
+5. Reopen and unlock with passphrase. The app locks on backgrounding and after five minutes since last key use. Request already in flight may still finish. Losing passphrase means deleting the vault and re-entering key.
+
+## Security boundaries
+AES-GCM 256 with random salt/IV and PBKDF2 SHA-256 600000 iterations. Key is excluded from the normal study backup. No external scripts. The key transits your own Cloudflare Worker over TLS; Cloudflare is a trusted intermediary with access during processing. Worker forwards to a fixed NVIDIA hostname, rejects cross-origin browser requests and never intentionally records keys. Observability disabled. Same-origin check is not device authentication and is spoofable by nonbrowser clients. A malicious app update or compromised device can steal unlocked keys. NVIDIA bearer keys cannot be made device-bound by this app. Study history and references are local but unencrypted; exported study backups are plaintext. NVIDIA may retain submitted content under trial terms. Do not send confidential data. Revoke compromised keys at NVIDIA. Use a dedicated key if available. Free quotas may change; no automatic paid fallback.
+
+## Scope/testing
+Prior beta features preserved: rule-based diagnostic, reference retrieval, timer, history, photo preview, print, backup. New tasks: evaluation, second examiner, model answers, quizzes, revision, coaching. OCR is manual; paste Apple Live Text output. Scores are estimated, not human-calibrated. Model discovery does not guarantee inference entitlement. No live key, Cloudflare deployment or iOS PWA testing was available to the developer. Run `node public/test.mjs` and `node test-nvidia.mjs` (Node 20+). Network tests use mocks only.
